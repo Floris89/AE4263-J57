@@ -100,7 +100,7 @@ package Assignment_J57
   end Design;
 
   model OffDesign
-    extends Assignment_J57.Design(environment(onDesignInit = false, Mach = 0.14703, useMach = true), LPC_map(P_E_nom = 83963, T_E_nom = 254.12, f_nom = 70.954, omega_nom = 623.606141737574), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.35, f_nom = 70.594, omega_nom = 967.0869385300581), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.058899e6, P_L_nom = 458175, T_E_nom = 1189.39, f_nom = 63.847, omega_nom = 967.0869385300581), LPT_map(P_E_nom = 458175, P_L_nom = 237108, T_E_nom = 962.89, f_nom = 70.23, omega_nom = 623.606141737574), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), nozzleExhaust(A_fixed = 0.2447031), fuelFlow(table = [0, 0.4; 100, 0.4]));
+    extends Assignment_J57.Design(environment(onDesignInit = false, Mach = 0.14703, useMach = true), LPC_map(P_E_nom = 83963, T_E_nom = 254.12, f_nom = 70.954, omega_nom = 623.606141737574), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.35, f_nom = 70.954, omega_nom = 967.0869385300581), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.058899e6, P_L_nom = 458175, T_E_nom = 1189.39, f_nom = 63.847, omega_nom = 967.0869385300581), LPT_map(P_E_nom = 458175, P_L_nom = 237108, T_E_nom = 962.89, f_nom = 70.23, omega_nom = 623.606141737574), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), nozzleExhaust(A_fixed = 0.2447031), fuelFlow(table = [0, 1.03684; 100, 1.03684]));
   equation
 
   annotation(
