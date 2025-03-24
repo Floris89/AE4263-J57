@@ -1,6 +1,6 @@
 package Assignment_J57
   model Design
-    inner BasicAeroEngines.Components.Environment environment(onDesignInit = true, Pb(displayUnit = "kPa") = 82705, Tb(displayUnit = "K") = 253.03) annotation(
+    inner BasicAeroEngines.Components.Environment environment(onDesignInit = true, Pb(displayUnit = "kPa") = 82705, Tb(displayUnit = "K") = 253.03, Mach = 0.14703, useMach = true) annotation(
       Placement(transformation(origin = {50, 50}, extent = {{-10, -10}, {10, 10}})));
     //Intake
     BasicAeroEngines.Components.AirIntake airIntake annotation(
@@ -8,7 +8,7 @@ package Assignment_J57
     //Compressors
     BasicAeroEngines.Components.CompressorMapsBetaLines LPC(data = LPC_map, P_E(displayUnit = "kPa"), P_L(displayUnit = "kPa")) annotation(
       Placement(transformation(origin = {-60, -38}, extent = {{-10, -10}, {10, 10}})));
-    BasicAeroEngines.Components.CompressorBleed HPC(data = HPC_map, Nbleed = 2, Nstages = 6, Nstages_Bleeds = {3, 4})  annotation(
+    BasicAeroEngines.Components.CompressorBleed HPC(data = HPC_map, Nbleed = 2, Nstages = 6, Nstages_Bleeds = {3, 4}) annotation(
       Placement(transformation(origin = {-32, -14}, extent = {{-10, -10}, {10, 10}})));
     //Combustor
     BasicAeroEngines.Components.CombustionChamberLHV combustionChamberLHV(LHV(displayUnit = "MJ/kg") = 4.296e7, V = 0.1, P_start(displayUnit = "kPa") = 1.120528e6, T_start(displayUnit = "K") = 598.4, ZC = 1, ZH = 1.9167, eta_comb = 0.9945, P_Loss = 5.5, steadyStateInit = true) annotation(
@@ -16,7 +16,7 @@ package Assignment_J57
     //Turbines
     BasicAeroEngines.Components.CooledTurbine cooledHPT(data = HPT_map, eta_mech = 0.982, Nstages = 1, Nbleed = 1, Nstages_Bleeds = {1}, Xi_cool_stat = {0.05}, Xi_cool_rot = {0.05}, CoolingTechStat = {2}, CoolingTechRot = {2}) annotation(
       Placement(transformation(origin = {32, -14}, extent = {{-10, -10}, {10, 10}})));
-    BasicAeroEngines.Components.CooledTurbine LPT(data = LPT_map, eta_mech = 1, Nstages = 2, CoolingTechStat = {2, 2}, CoolingTechRot = {2, 2}, Nbleed = 1, Nstages_Bleeds = {2}, Xi_cool_stat = {0, 0.02})  annotation(
+    BasicAeroEngines.Components.CooledTurbine LPT(data = LPT_map, eta_mech = 1, Nstages = 2, CoolingTechStat = {2, 2}, CoolingTechRot = {2, 2}, Nbleed = 1, Nstages_Bleeds = {2}, Xi_cool_stat = {0, 0.02}) annotation(
       Placement(transformation(origin = {50, -38}, extent = {{-10, -10}, {10, 10}})));
     //Exhaust
     BasicAeroEngines.Components.NozzleExhaust nozzleExhaust(f_nom = 71.636, A_fixed = 0.2375) annotation(
@@ -45,17 +45,16 @@ package Assignment_J57
       Placement(transformation(origin = {142, -38}, extent = {{-10, -10}, {10, 10}})));
     Modelica.Blocks.Sources.RealExpression overalEfficiency(y = (netThrust.y*environment.v)/combustionChamberLHV.Q) annotation(
       Placement(transformation(origin = {142, -60}, extent = {{-10, -10}, {10, 10}})));
-    Modelica.Blocks.Sources.RealExpression SFC(y = fuelFlow.y/netThrust.y)  annotation(
+    Modelica.Blocks.Sources.RealExpression SFC(y = fuelFlow.y/nozzleExhaust.thrust) annotation(
       Placement(transformation(origin = {142, 0}, extent = {{-10, -10}, {10, 10}})));
-  
-  // Ducts
-  BasicAeroEngines.Components.LinearPressureDropAir linearPressureDropAir(referenceMassFlowRate = 70.955, referencePressureDrop(displayUnit = "kPa") = 6533)  annotation(
+    // Ducts
+    BasicAeroEngines.Components.LinearPressureDropAir linearPressureDropAir(referenceMassFlowRate = 70.955, referencePressureDrop(displayUnit = "kPa") = 6533) annotation(
       Placement(transformation(origin = {-54, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-  BasicAeroEngines.Components.BleedAirDistributor bleedAirDistributor(Nbleed = 2, useOverBleed = true, useHandBleed = false, NPortsOverBleed = {1}, NPortsLPTBleed = {2}, OverBleedPorts = 1, LPTBleedPorts = 1) annotation(
+    BasicAeroEngines.Components.BleedAirDistributor bleedAirDistributor(Nbleed = 2, useOverBleed = true, useHandBleed = false, NPortsOverBleed = {1}, NPortsLPTBleed = {2}, OverBleedPorts = 1, LPTBleedPorts = 1) annotation(
       Placement(transformation(origin = {4, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-  BasicAeroEngines.Components.FlowSourceAir flowSourceAir(referenceMassFlowRate = -0.005*70.955, referenceTemperature(displayUnit = "K") = 401.05) annotation(
+    BasicAeroEngines.Components.FlowSourceAir flowSourceAir(referenceMassFlowRate = -0.005*70.955, referenceTemperature(displayUnit = "K") = 401.05) annotation(
       Placement(transformation(origin = {18, -62}, extent = {{-6, -6}, {6, 6}}, rotation = 180)));
-  BasicAeroEngines.Components.LinearPressureDropExhaust linearPressureDropExhaust(referenceMassFlowRate = 71.636, referencePressureDrop(displayUnit = "kPa") = 10572)  annotation(
+    BasicAeroEngines.Components.LinearPressureDropExhaust linearPressureDropExhaust(referenceMassFlowRate = 71.636, referencePressureDrop(displayUnit = "kPa") = 10572) annotation(
       Placement(transformation(origin = {68, -28}, extent = {{-6, -6}, {6, 6}})));
   equation
     connect(airIntake.outlet, LPC.inlet) annotation(
@@ -99,6 +98,15 @@ package Assignment_J57
       Diagram,
       experiment(StartTime = 0, StopTime = 10, Tolerance = 1e-06, Interval = 0.02));
   end Design;
+
+  model OffDesign
+    extends Assignment_J57.Design(environment(onDesignInit = false, Mach = 0.14703, useMach = true), LPC_map(P_E_nom = 83963, T_E_nom = 254.12, f_nom = 70.954, omega_nom = 623.606141737574), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.35, f_nom = 70.594, omega_nom = 967.0869385300581), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.058899e6, P_L_nom = 458175, T_E_nom = 1189.39, f_nom = 63.847, omega_nom = 967.0869385300581), LPT_map(P_E_nom = 458175, P_L_nom = 237108, T_E_nom = 962.89, f_nom = 70.23, omega_nom = 623.606141737574), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), nozzleExhaust(A_fixed = 0.2447031), fuelFlow(table = [0, 0.4; 100, 0.4]));
+  equation
+
+  annotation(
+      Icon(graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(extent = {{-100, 100}, {100, -100}}, textString = "OFF
+DES")}));
+end OffDesign;
   annotation(
     Icon(graphics = {Text(origin = {3, 4}, extent = {{-63, 54}, {63, -54}}, textString = "J57")}),
     uses(BasicAeroEngines(version = "2.0.0"), Modelica(version = "4.0.0")));
