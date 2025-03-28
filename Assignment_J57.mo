@@ -55,7 +55,7 @@ package Assignment_J57
     BasicAeroEngines.Components.LinearPressureDropExhaust linearPressureDropExhaust(referenceMassFlowRate = 71.636, referencePressureDrop(displayUnit = "kPa") = 10572) annotation(
       Placement(transformation(origin = {68, -28}, extent = {{-6, -6}, {6, 6}})));
   Components.NozzleExhaustChokeable nozzleExhaustChokeable(f_nom = 71.636, A_fixed = 0.2375)  annotation(
-      Placement(transformation(origin = {92, -34}, extent = {{-10, -10}, {10, 10}})));
+      Placement(transformation(origin = {89, -37}, extent = {{-15, -15}, {15, 15}})));
   equation
     connect(airIntake.outlet, LPC.inlet) annotation(
       Line(points = {{-80, -28}, {-66, -28}}, color = {170, 223, 255}));
@@ -92,7 +92,7 @@ package Assignment_J57
     connect(bleedAirDistributor.OverBleed[1], flowSourceAir.fluidPort) annotation(
       Line(points = {{4, -62}, {12, -62}}, color = {170, 223, 255}));
   connect(linearPressureDropExhaust.outlet, nozzleExhaustChokeable.inlet) annotation(
-      Line(points = {{74, -28}, {86, -28}}, color = {129, 170, 194}));
+      Line(points = {{74, -28}, {80, -28}, {80, -29}}, color = {129, 170, 194}));
     annotation(
       Icon(graphics = {Text(origin = {1, 1}, extent = {{-81, 79}, {81, -79}}, textString = "ADP")}),
       Diagram,
@@ -146,12 +146,12 @@ DES")}));
         A = A_fixed;
       end if;
     equation
-    // Nozzle inlet conditions (stagnation assumed)
+// Nozzle inlet conditions (stagnation assumed)
       inletProps.p = P_E;
       inletProps.h = h_E;
       inletProps.X = X_E;
       s = ExhaustFlow.specificEntropy(inletProps.state);
-    // Nozzle outlet conditions
+// Nozzle outlet conditions
       outletProps.X = X_E;
       inletProps.h = outletProps.h + v^2/2;
       s = ExhaustFlow.specificEntropy(outletProps.state);
@@ -160,27 +160,26 @@ DES")}));
       PR_crit = (2/(gamma_mean + 1))^(-gamma_mean/(gamma_mean - 1));
       outletProps.d*v*A = f_E;
       outletProps.p = P_L;
-    // Nozzle outlet conditions
+// Nozzle outlet conditions
       if (P_E/environment.P < PR_crit) then
         P_L = environment.P;
       else
         P_L = P_E/PR_crit;
       end if;
       assert(v < c, "Invalid supersonic conditions at nozzle outlet (not a Laval nozzle)", AssertionLevel.warning);
-    // Generated thrust and power
+// Generated thrust and power
       thrust = f_E*v + (outletProps.p - environment.P)*A;
       W = f_E*v^2/2;
-    // Boundary conditions
+// Boundary conditions
       P_E = inlet.P;
       f_E = inlet.f;
       h_E = inStream(inlet.h_L);
       X_E = inStream(inlet.X_L);
-    //X_E = {0.768,0.232};
+//X_E = {0.768,0.232};
       X_L = X_E;
       inlet.h_L = 0 "Not used, no flow reversal";
       inlet.X_L = ExhaustFlow.reference_X "Not used, no flow reversal";
-      
-      // Calculating the total properties
+// Calculating the total properties
       outletPropsTotal.h = inletProps.h;
       outletPropsTotal.X = X_E;
       outletPropsTotal.p = P_E;
