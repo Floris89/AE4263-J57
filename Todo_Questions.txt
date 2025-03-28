@@ -6,3 +6,30 @@ To do:
 Questions:
 - P_L_iso_start in the cooledTurbine class is not compatible with Nstages = 1. This results in a division by 0 error.
 - Linear system is singular upon solving.
+
+Reference cycle:
+- T24: RC=401.5K vs OM=400.6K
+	- Reason unkown, our guesses: Isentropic eff wrong or measurement error on their side
+
+- P24 to P25 has a drop of 6.533 kPa, T and f are constant. This is the duct connecting LPC with HPC. It should be modelled to get accurate LPC exit temperature and HPC inlet pressure. If not, one will be off.
+
+- T3: RC=598.4 vs OM=597.4K. Repeat 1K off.
+
+- T4: RC=1199.0K vs OM=1178.9K. Off by a lil, could be due to not exactly knowing fuel composition.
+
+- T45: RC=967.53K vs OM=955.6K. Off due to 2% massflow difference and cooling model assumptions.
+
+- LPT entry T = 956.8K vs HPT exit T =955.6K. Weird?
+
+- T5: RC=831.49K vs OM=827.6K. Little off, manageable.
+
+- The last pressure drop in the nozzle is not included in the model.
+
+- FN: RC=46.85kN vs OM=47.534kN
+
+Feedback Carlo:
+- You are assuming to have a convergent-divergent nozzle. This may not be the case. If not, then could be chocked, to improve the model. (Boris: Equations in slides of aeroengines). Makes sense to include this for a turbojet vs turbofan. NozzleAir in the library is a good example.
+- The normalised reduced qualities at the design point should be close to one in steady-state (_n). This shows that off-design is properly calibrated. Could use fine-tuning, but looks great already.
+- Report: 
+	- Indicate the assumptions and limitations of the model
+	- Show an interpretation of the results and how they deviate from the experimental data. And things like "why doesn't total pressure change in the nozzle".

@@ -105,7 +105,8 @@ package Assignment_J57
 
     annotation(
       Icon(graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(extent = {{-100, 100}, {100, -100}}, textString = "OFF
-DES")}));
+DES")}),
+  experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
   end OffDesign;
 
   package Components
@@ -146,12 +147,12 @@ DES")}));
         A = A_fixed;
       end if;
     equation
-    // Nozzle inlet conditions (stagnation assumed)
+// Nozzle inlet conditions (stagnation assumed)
       inletProps.p = P_E;
       inletProps.h = h_E;
       inletProps.X = X_E;
       s = ExhaustFlow.specificEntropy(inletProps.state);
-    // Nozzle outlet conditions
+// Nozzle outlet conditions
       outletProps.X = X_E;
       inletProps.h = outletProps.h + v^2/2;
       s = ExhaustFlow.specificEntropy(outletProps.state);
@@ -160,27 +161,26 @@ DES")}));
       PR_crit = (2/(gamma_mean + 1))^(-gamma_mean/(gamma_mean - 1));
       outletProps.d*v*A = f_E;
       outletProps.p = P_L;
-    // Nozzle outlet conditions
+// Nozzle outlet conditions
       if (P_E/environment.P < PR_crit) then
         P_L = environment.P;
       else
         P_L = P_E/PR_crit;
       end if;
       assert(v < c, "Invalid supersonic conditions at nozzle outlet (not a Laval nozzle)", AssertionLevel.warning);
-    // Generated thrust and power
+// Generated thrust and power
       thrust = f_E*v + (outletProps.p - environment.P)*A;
       W = f_E*v^2/2;
-    // Boundary conditions
+// Boundary conditions
       P_E = inlet.P;
       f_E = inlet.f;
       h_E = inStream(inlet.h_L);
       X_E = inStream(inlet.X_L);
-    //X_E = {0.768,0.232};
+//X_E = {0.768,0.232};
       X_L = X_E;
       inlet.h_L = 0 "Not used, no flow reversal";
       inlet.X_L = ExhaustFlow.reference_X "Not used, no flow reversal";
-      
-      // Calculating the total properties
+// Calculating the total properties
       outletPropsTotal.h = inletProps.h;
       outletPropsTotal.X = X_E;
       outletPropsTotal.p = P_E;
@@ -189,6 +189,26 @@ DES")}));
         Icon(graphics = {Polygon(fillColor = {150, 150, 150}, fillPattern = FillPattern.Solid, points = {{-60, 60}, {-60, -60}, {60, -100}, {60, 100}, {60, 100}, {-60, 60}})}, coordinateSystem(initialScale = 0.1)));
     end NozzleExhaustChokeable;
   end Components;
+  
+  model OffDesignProperlyScaledMaps
+    extends Design(environment(onDesignInit = false, Mach = 0, useMach = true), LPC_map(P_E_nom = 82705, T_E_nom = 253.03, f_nom = 70.954, omega_nom = 623.606141737574, P_L_nom = 326684, eta_nom = 0.82), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.59, f_nom = 70.954, omega_nom = 967.0869385300581, P_L_nom(displayUnit = "kPa") = 1.12053e6, eta_nom = 0.85), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.0589e6, P_L_nom (displayUnit = "kPa")= 458033, T_E_nom = 1189.68, f_nom = 63.85, omega_nom = 967.0869385300581, eta_nom = 0.865), LPT_map(P_E_nom = 458033, P_L_nom = 235536, T_E_nom = 962.9, f_nom = 70.23, omega_nom = 623.606141737574, eta_nom = 0.882), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), fuelFlow(table = [0, 1.03684; 100, 1.03684]), nozzleExhaustChokeable(A_fixed = 0.23024082596048073));
+  equation
+  
+    annotation(
+      Icon(graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(extent = {{-100, 100}, {100, -100}}, textString = "OFF
+  DES")}),
+      experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
+  end OffDesignProperlyScaledMaps;
+  
+  model OffDesign_Case1
+    extends Design(environment(onDesignInit = false, Mach = 0, useMach = true), LPC_map(P_E_nom = 82705, T_E_nom = 253.03, f_nom = 70.954, omega_nom = 623.606141737574, P_L_nom = 326684, eta_nom = 0.82), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.59, f_nom = 70.954, omega_nom = 967.0869385300581, P_L_nom(displayUnit = "kPa") = 1.12053e6, eta_nom = 0.85), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.0589e6, P_L_nom (displayUnit = "kPa")= 458033, T_E_nom = 1189.68, f_nom = 63.85, omega_nom = 967.0869385300581, eta_nom = 0.865), LPT_map(P_E_nom = 458033, P_L_nom = 235536, T_E_nom = 962.9, f_nom = 70.23, omega_nom = 623.606141737574, eta_nom = 0.882), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), fuelFlow(table = [0, 0.535; 50, 0.535; 50, 0.68; 100, 0.68; 100, 0.825; 100, 0.825; 100, 0.945; 150, 0.945; 150, 1.03684; 200, 1.03684; 200, 1.17; 250, 1.17]), nozzleExhaustChokeable(A_fixed = 0.23024082596048073), HP_shaft(J = 1), LP_shaft(J = 1));
+  equation
+  
+    annotation(
+      Icon(graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(extent = {{-100, 100}, {100, -100}}, textString = "OFF
+  DES")}),
+      experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
+  end OffDesign_Case1;
   annotation(
     Icon(graphics = {Text(origin = {3, 4}, extent = {{-63, 54}, {63, -54}}, textString = "J57")}),
     uses(BasicAeroEngines(version = "2.0.0"), Modelica(version = "4.0.0")));
