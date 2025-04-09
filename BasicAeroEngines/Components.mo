@@ -125,6 +125,7 @@ package Components "Components of aeroengines"
 
     parameter Boolean enforceBetaLimits = false "Strictly enforce beta limits if true";
     parameter Boolean useHomotopy = false "Use simplified map for initialization";
+    parameter Real N_n_design = 1;
     final parameter Real q_Phi = 1/(data.beta_choke - data.beta_surge)
       "slope of simplified Phi curve at nominal speed: (Phi_n_choke-Phi_n_surge)/(beta_choke-beta_surge)";
     final parameter Real q_PR = -1/(data.beta_choke - data.beta_surge)
@@ -152,7 +153,7 @@ package Components "Components of aeroengines"
   initial equation
     if environment.onDesignInit == true then
       //These two equations force the component to work at the nominal operating point of the maps
-      N_n = 1;
+      N_n = N_n_design;
       beta = data.beta_nom;
       P_L_nom = data.P_L_nom;
       T_E_nom = T_E;

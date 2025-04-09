@@ -209,6 +209,14 @@ DES")}),
   DES")}),
       experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
   end OffDesign_Case1;
+
+  model OnDesign_new
+    extends Assignment_J57.Design(LPC(N_n_design = 1.2), LPC_map(eta_nom = 0.82/1.0075));
+  equation
+
+  annotation(
+      experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
+end OnDesign_new;
   annotation(
     Icon(graphics = {Text(origin = {3, 4}, extent = {{-63, 54}, {63, -54}}, textString = "J57")}),
     uses(BasicAeroEngines(version = "2.0.0"), Modelica(version = "4.0.0")));
