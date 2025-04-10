@@ -25,7 +25,7 @@ package Assignment_J57
     BasicAeroEngines.Components.ShaftInertia LP_shaft(J = 380, omega_nom(displayUnit = "rpm") = 623.606141737574) annotation(
       Placement(transformation(origin = {0, -38}, extent = {{-10, -10}, {10, 10}})));
     //Maps
-    parameter BasicAeroEngines.Data.Compressors.GSP_LPC LPC_map(P_L_nom(displayUnit = "kPa") = 326684, T_E_nom(displayUnit = "K"), P_E_nom(displayUnit = "kPa"), omega_nom(displayUnit = "rpm"), eta_nom = 0.82) annotation(
+    parameter BasicAeroEngines.Data.Compressors.GSP_LPC LPC_map(P_L_nom(displayUnit = "kPa") = 326684, T_E_nom(displayUnit = "K"), P_E_nom(displayUnit = "kPa"), omega_nom(displayUnit = "rpm"), eta_nom = 0.82/0.96250, beta_nom = 11) annotation(
       Placement(transformation(origin = {-58, -64}, extent = {{-10, -10}, {10, 10}})));
     parameter BasicAeroEngines.Data.Compressors.GSP_HPC HPC_map(P_L_nom(displayUnit = "kPa") = 1.120528e6, P_E_nom(displayUnit = "kPa"), T_E_nom(displayUnit = "K"), omega_nom(displayUnit = "rpm"), eta_nom = 0.85) annotation(
       Placement(transformation(origin = {-40, 12}, extent = {{-10, -10}, {10, 10}})));
@@ -201,7 +201,7 @@ DES")}),
   end OffDesignProperlyScaledMaps;
   
   model OffDesign_Case1
-    extends Design(environment(onDesignInit = false, Mach = 0, useMach = true), LPC_map(P_E_nom = 82705, T_E_nom = 253.03, f_nom = 70.954, omega_nom = 623.606141737574, P_L_nom = 326684, eta_nom = 0.82), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.59, f_nom = 70.954, omega_nom = 967.0869385300581, P_L_nom(displayUnit = "kPa") = 1.12053e6, eta_nom = 0.85), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.0589e6, P_L_nom (displayUnit = "kPa")= 458033, T_E_nom = 1189.68, f_nom = 63.85, omega_nom = 967.0869385300581, eta_nom = 0.865), LPT_map(P_E_nom = 458033, P_L_nom = 235536, T_E_nom = 962.9, f_nom = 70.23, omega_nom = 623.606141737574, eta_nom = 0.882), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), fuelFlow(table = [0, 0.535; 50, 0.535; 50, 0.68; 100, 0.68; 100, 0.825; 100, 0.825; 100, 0.945; 150, 0.945; 150, 1.03684; 200, 1.03684; 200, 1.17; 250, 1.17]), nozzleExhaustChokeable(A_fixed = 0.23024082596048073), HP_shaft(J = 1), LP_shaft(J = 1));
+    extends Design(environment(onDesignInit = false, Mach = 0, useMach = true), LPC_map(P_E_nom = 82705, T_E_nom = 253.03, f_nom = 70.954, omega_nom = 623.606141737574, P_L_nom = 326684, eta_nom = 0.82), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.59, f_nom = 70.954, omega_nom = 967.0869385300581, P_L_nom(displayUnit = "kPa") = 1.12053e6, eta_nom = 0.85), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.0589e6, P_L_nom (displayUnit = "kPa")= 458033, T_E_nom = 1189.68, f_nom = 63.85, omega_nom = 967.0869385300581, eta_nom = 0.865), LPT_map(P_E_nom = 458033, P_L_nom = 235536, T_E_nom = 962.9, f_nom = 70.23, omega_nom = 623.606141737574, eta_nom = 0.882), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), fuelFlow(table = [0, 0.535; 50, 0.535; 150, 1.03684]), nozzleExhaustChokeable(A_fixed = 0.23024082596048073), HP_shaft(J = 1), LP_shaft(J = 1));
   equation
   
     annotation(
@@ -211,12 +211,22 @@ DES")}),
   end OffDesign_Case1;
 
   model OnDesign_new
-    extends Assignment_J57.Design(LPC(N_n_design = 1.2), LPC_map(eta_nom = 0.82/1.0075));
+    extends Assignment_J57.Design(LPC(N_n_design = 1.2), LPC_map(eta_nom = 0.82/0.88750, P_L_nom = 326684, beta_nom = 15), nozzleExhaustChokeable(f_nom = 71.636, A_fixed));
   equation
 
   annotation(
       experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
 end OnDesign_new;
+  
+  model OffDesign_Case1_new
+    extends Design(environment(onDesignInit = false, Mach = 0, useMach = true), LPC_map(P_E_nom = 82705, T_E_nom = 253.03, f_nom = 77.02684821397382, omega_nom (displayUnit = "rad/s")= 519.6717847813117, P_L_nom = 326684, eta_nom = 0.923943661971831), linearPressureDropAir(referenceMassFlowRate = 70.954), HPC_map(P_E_nom = 320151, T_E_nom = 400.59, f_nom = 70.954, omega_nom = 967.0869385300581, P_L_nom(displayUnit = "kPa") = 1.12053e6, eta_nom = 0.85), combustionChamberLHV(T_start = 597.11, steadyStateInit = false), HPT_map(P_E_nom = 1.0589e6, P_L_nom(displayUnit = "kPa") = 458033, T_E_nom = 1189.68, f_nom = 63.85, omega_nom = 967.0869385300581, eta_nom = 0.865), LPT_map(P_E_nom = 458033, P_L_nom = 235536, T_E_nom = 962.9, f_nom = 70.23, omega_nom = 623.606141737574, eta_nom = 0.882), flowSourceAir(referenceMassFlowRate = -0.354775, referenceTemperature = 400.35), fuelFlow(table = [0, 0.535; 50, 0.535; 150, 1.03684]), nozzleExhaustChokeable(A_fixed = 0.23024082596048073), HP_shaft(J = 1), LP_shaft(J = 1), LPC(N_n_design = 1.0));
+  equation
+  
+    annotation(
+      Icon(graphics = {Rectangle(fillColor = {255, 255, 255}, fillPattern = FillPattern.Solid, extent = {{-100, 100}, {100, -100}}), Text(extent = {{-100, 100}, {100, -100}}, textString = "OFF
+    DES")}),
+      experiment(StartTime = 0, StopTime = 250, Tolerance = 1e-06, Interval = 0.5));
+  end OffDesign_Case1_new;
   annotation(
     Icon(graphics = {Text(origin = {3, 4}, extent = {{-63, 54}, {63, -54}}, textString = "J57")}),
     uses(BasicAeroEngines(version = "2.0.0"), Modelica(version = "4.0.0")));
